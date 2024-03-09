@@ -1,0 +1,38 @@
+ // ESP32'de Ultrasonik Mesafe Sensörü kullanarak mesafe ölçümü
+
+// Kütüphaneleri ekleme
+#include <Arduino.h>
+
+// Pin tanımlamaları
+const int trigPin = 12; // Sensörün trig pini
+const int echoPin = 14; // Sensörün echo pini
+
+// Mesafe ölçümü için zaman değişkenleri
+long duration;
+int distance;
+
+void setup() {
+  Serial.begin(9600); // Seri bağlantı başlatılır
+  pinMode(trigPin, OUTPUT); // trigPin çıkış olarak ayarlanır
+  pinMode(echoPin, INPUT); // echoPin giriş olarak ayarlanır
+}
+
+void loop() {
+  // Sensörden mesafe ölçümü
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  // Echo pini yüksek olduğu süre boyunca zaman ölçümü yapılır
+  duration = pulseIn(echoPin, HIGH);
+  
+  // Mesafe hesaplanır (ses hızı 340 m/s olduğu için 2'ye bölünür)
+  distance= duration*0.034/2;
+  
+  // Mesafe seri bağlantıya yazdırılır
+  Serial.print("Mesafe: ");
+  Serial.println(distance);
+  
+  delay(1000); // 1 saniye beklenir ve tekrarlanır
